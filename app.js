@@ -336,11 +336,25 @@ function toggleRecording() {
   if (!isRecording) {
     navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
       recordedChunks = [];
-      mediaRecorder = new MediaRecorder(stream);
+
+      // iOS Safari doesn't support webm - use mp4 or wav
+      let options = {};
+      if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+        options = { mimeType: 'audio/webm;codecs=opus' };
+      } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+        options = { mimeType: 'audio/webm' };
+      } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+        options = { mimeType: 'audio/mp4' };
+      }
+      // If none supported, use default (Safari will pick its own format)
+
+      mediaRecorder = Object.keys(options).length > 0
+        ? new MediaRecorder(stream, options)
+        : new MediaRecorder(stream);
       mediaRecorder.ondataavailable = (e) => { if (e.data && e.data.size > 0) recordedChunks.push(e.data); };
       mediaRecorder.onstop = () => {
         stream.getTracks().forEach(t => t.stop());
-        const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+        const blob = new Blob(recordedChunks, { type: mediaRecorder.mimeType || 'audio/mp4' });
         const letter = document.getElementById('record-letter').value;
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -385,3 +399,16 @@ function clearRecordings() {
 
 // Init
 loadProgress();
+
+// iOS audio unlock - Safari requires user gesture to play audio
+let audioUnlocked = false;
+document.addEventListener('touchstart', function unlockAudio() {
+  if (audioUnlocked) return;
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const buf = ctx.createBuffer(1, 1, 22050);
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  src.connect(ctx.destination);
+  src.start(0);
+  audioUnlocked = true;
+}, { once: false });
