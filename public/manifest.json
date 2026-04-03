@@ -1,0 +1,11 @@
+{
+  "name": "كتابة الفارس",
+  "short_name": "الفارس",
+  "description": "تعلم الكتابة العربية مع فارس",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff3e0",
+  "theme_color": "#e65100",
+  "orientation": "any",
+  "icons": []
+}

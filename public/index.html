@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>كتابة الفارس ✏️</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Home Screen -->
+  <div id="home-screen" class="screen active">
+    <h1>✏️ كتابة الفارس</h1>
+    <p>مرحباً فارس!</p>
+    <button class="big-btn green" onclick="showScreen('letters-screen')">🔤 الحروف</button>
+    <button class="big-btn blue" onclick="showScreen('words-screen')">📝 الكلمات</button>
+    <button class="small-btn" onclick="showScreen('mom-screen')">👩 صفحة ماما</button>
+  </div>
+
+  <!-- Letters Screen -->
+  <div id="letters-screen" class="screen">
+    <h2>الحروف العربية</h2>
+    <div id="letters-grid"></div>
+    <button class="back-btn" onclick="showScreen('home-screen')">🔙</button>
+  </div>
+
+  <!-- Words Screen -->
+  <div id="words-screen" class="screen">
+    <h2>الكلمات</h2>
+    <div id="words-grid"></div>
+    <p id="no-words" style="color:#999;font-size:1.2rem;">ماما لم تضف كلمات بعد</p>
+    <button class="back-btn" onclick="showScreen('home-screen')">🔙</button>
+  </div>
+
+  <!-- Practice Screen -->
+  <div id="practice-screen" class="screen">
+    <div id="practice-header">
+      <span id="current-display"></span>
+      <span id="practice-stars"></span>
+    </div>
+    <canvas id="trace-canvas"></canvas>
+    <div id="practice-controls">
+      <button onclick="clearCanvas()">🗑️</button>
+      <button onclick="checkTrace()">✅</button>
+      <button onclick="playLetterSound()">🔊</button>
+    </div>
+    <button class="back-btn" onclick="goBack()">🔙</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="result-screen" class="screen">
+    <div id="result-stars"></div>
+    <h2 id="result-msg"></h2>
+    <div id="result-buttons">
+      <button class="big-btn yellow" onclick="retryPractice()">🔄 مرة ثانية</button>
+      <button class="big-btn green" id="next-btn" onclick="nextPractice()">➡️ التالي</button>
+    </div>
+  </div>
+
+  <!-- Mom Screen (PIN protected) -->
+  <div id="mom-screen" class="screen">
+    <h2>👩 صفحة ماما</h2>
+    <div id="mom-content" style="display:none;">
+      <input type="text" id="new-word" placeholder="اكتبي كلمة جديدة" maxlength="6">
+      <button class="add-word-btn" onclick="addWord()">➕ إضافة</button>
+      <div id="mom-words-list"></div>
+
+      <h3 style="color:#e65100;margin-top:20px;">🎙️ تسجيل الأصوات</h3>
+      <p style="color:#666;font-size:0.9rem;">سجلي نطق الحروف وأصوات التشجيع</p>
+      <div id="record-section">
+        <select id="record-letter" style="font-size:1.5rem;padding:8px;border-radius:10px;"></select>
+        <button class="add-word-btn" id="record-btn" onclick="toggleRecording()" style="background:#e53935;">🎙️ تسجيل</button>
+        <button class="add-word-btn" onclick="playRecorded()" style="background:#1e88e5;">🔊 تشغيل</button>
+      </div>
+      <div id="record-status" style="color:#666;font-size:0.9rem;"></div>
+      <button class="add-word-btn" onclick="clearRecordings()" style="background:#c62828;margin-top:15px;">🗑️ مسح جميع التسجيلات</button>
+    </div>
+    <div id="mom-pin-area">
+      <input type="password" id="mom-pin" placeholder="الرقم السري" maxlength="4" inputmode="numeric">
+      <button class="big-btn blue" onclick="checkMomPin()">دخول</button>
+    </div>
+    <button class="back-btn" onclick="showScreen('home-screen')">🔙</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
